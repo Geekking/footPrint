@@ -11,6 +11,8 @@
     "styles": "*",
 	"formidable":"*",
 	"connect-mongo": "*",
-	"mongodb": ">= 0.9.9"
+	"mongodb": ">= 0.9.9",
+	"mysql": "2.0.0-alpha9",
+  	"formidable": "*"
   }
 }

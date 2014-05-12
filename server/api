@@ -1,0 +1,158 @@
+api 说明：
+
+
+101:user not login
+104:database error
+108:wrong formate
+
+registe:
+	@preRequired:
+		userID:string
+		password:string
+		userName:string	
+	@return:
+		201: User already exists
+		202: Can not save into db
+		200: registe success
+	
+login:
+	@preRequired:
+		userID:string
+		password:string
+	@return:
+		301: user has already login
+		302: user doesnot exist
+		303: password not match
+		300: login success
+logout:
+	@preRequired:
+		userID: string
+	@return:
+		101: user not login
+		350: logout success
+		351: logout failed			
+newFP:
+	@preRequired:
+		userID: string
+		description: string
+		position: string
+		videoTime: string
+		location: string
+		image: image   /* will change to video*/
+		informUserList
+	@return:
+		101: user not login
+		400: post success
+		401: post failed	
+refreshFP:
+	@preRequired:
+		lastFPID:string
+		userID:string
+	@return:
+		450:new foot prints
+			an array of foot prints
+		451:no more foot prints
+findUser:
+	@preRequired:
+		aimedUserID:string
+		userID:string
+	@return:
+		500: user find 
+			userlist:
+				aUsr:
+					nickName:string
+					userID: String
+		501: user not found
+addFriends:
+	@preRequired:
+		aimedUserID:string
+	@return:
+		550: request has post
+		551: user not found
+		552: has already posted request
+
+replyAddFriend:
+	@preRequired:
+		hasAdmit:bool
+		requestID:Integer
+	@return:
+		540:
+			user admitted
+		541:
+			user refused
+
+searchNearFP:
+	@preRequired:
+		userID: string
+		Location: string
+		position: string
+		lastFriendFPID: Integer   current location's last friends fp id 
+		requestTime:DateTime
+	@return:
+		600: newFP found
+			newFPs:
+				aFP:
+					FPID:Integer
+					PostUser:string
+					comments:
+						commentUser:
+						commentLocation:
+						commentPostion:
+						commentTime:Time
+		601: no new FP found
+	
+commentOnFP:
+	@preRequired:
+		FPID:Insteger
+		commentUserID:string		
+		commentLocation:string
+		commentPosition:string
+		commentContent:string
+		commentTime:DateTime
+	@return:
+		101: user not login
+		620: comment success
+		621: comment failed
+
+getCommentOfFP:
+	@preRequired:
+		userID:string
+		queryFPID:string
+	@return:
+		101:user not login
+		104:databse error
+		630:comment found
+			comments:
+				aComment:
+					commentTime:string
+					commentContent:string
+					commentUser:string
+		631:comment not found
+			
+getPersonInfo:
+	@preRequired:
+		queryuserID:string
+		userID:string
+	@return:
+		101:user not login
+		104:database err
+		640:query user found
+			userInfo:
+				nickName:string
+				userID:string
+				personalImg:string
+		641:query user not found
+
+addToMyFavourate:
+	@preRequired:
+		userID:string
+		fpID:string
+
+	@return:
+		101:user not login
+		104:database err
+		650:successfully added
+		651:
+			fpID not found
+		652: 
+			fpID already been added

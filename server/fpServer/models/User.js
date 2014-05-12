@@ -5,6 +5,7 @@ function User(user){
 	this.name = user.name;
 	this.password = user.password;
 	this.userID = user.userID;
+	this.nickName = user.nickName;
 };
 
 module.exports = User;
@@ -14,17 +15,15 @@ User.prototype.save = function save(callback){
 		name: this.name,
 		password: this.password,
 		userID: this.userID,
+		nickName:this.nickName
 	};
-	var insertSQL = util.format('INSERT INTO `user`(`uID`, `unickName`, `uPassword`, `sex`, `age`) VALUES (\'%s\',\'%s\',\'%s\',\'female\',19)',user.userID,user.userID,user.password);
-	console.log(insertSQL);	
+	console.log(user);
+	var insertSQL = util.format('INSERT INTO `user`(`uID`, `nickName`, `uPassword`, `sex`, `age`) VALUES (\'%s\',\'%s\',\'%s\',\'female\',19)',user.userID,user.nickName,user.password);
 	connection.query(insertSQL,function (err1, res1) {
         if (err1) {
 			console.log(err1);
-        	connection.end();
 			return callback(err1);
 		}
-		console.log("INSERT Return ==> ");
-        console.log(res1);
 		return callback(err1);
 	});
 
@@ -33,9 +32,7 @@ User.prototype.save = function save(callback){
 User.get = function get(userID,callback){
 	var selectSQL = util.format('SELECT `uID`,`uPassword` FROM `user` WHERE user.uID =\'%s\'',userID);
 	connection.query(selectSQL,function(err1,res1){
-		console.log(selectSQL);
 		if(err1) {
-			connection.end();
 			return callback(err1);
 		};
 		if ( res1[0]){
@@ -45,4 +42,31 @@ User.get = function get(userID,callback){
 		}
 	});
 };
-
+exports.getPersonInfo = function(req,res,next){
+	var queryuserID = req.body.queryuserID;
+	var selectSql = util.format('SELECT `uID` AS `userID`,`nickName`,`personalImg` WHERE user.uID = \'%s\'',queryuserID);
+	console.log(selectSql);
+	connection.query(selectSql,function(err1,res1){
+		if(err1){
+			console.log("databae error:",err1);
+			console.log(selectSql);
+			return res.json({
+				"code":104,
+				"phase":"database error"
+			});
+		}else{
+			if(res1[0]){
+				return res.json({
+					'code':640,
+					'phase':'query user found',
+					'userInfo':res1
+				});
+			}else{
+				return res.json({
+					"code":641,
+					"phase":"query user not found"
+				});
+			}
+		}
+	});
+};

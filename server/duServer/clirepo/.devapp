@@ -1,0 +1,13 @@
+app_id: '2642203'
+support:
+  createtypes:
+  - web
+  - worker
+  lang_types:
+  - php
+  - java
+  - python
+  - nodejs
+  version_tools:
+  - GIT
+  - SVN

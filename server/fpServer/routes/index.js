@@ -14,8 +14,9 @@ exports.index = function(req, res){
 exports.checkLogin = function(req,res,next){
 	if (!req.session.user){
 		//TODO: not logoin
+		console.log(req.session.user.userID);
 		return res.json({
-			'code': 202,
+			'code': 101,
 			'phase':'user not login'
 		});
 	}
@@ -24,6 +25,7 @@ exports.checkLogin = function(req,res,next){
 
 exports.logIn = function(req,res,next){
 	if (req.session.user){
+		console.log(req.session.user);
 		return res.json({
 			'code': 301,
 			'phase': 'user has already login',
@@ -32,6 +34,9 @@ exports.logIn = function(req,res,next){
 	var md5 = crypto.createHash('md5');
 	var password = md5.update(req.body.password).digest('base64');
 	User.get(req.body.userID,function(err,user){
+		if(err){
+			console.log(err);
+		};
 		if(!user){
 			return res.json({
 				'code' :302,
@@ -44,6 +49,7 @@ exports.logIn = function(req,res,next){
 				'phase':'password not match'
 			});
 		}
+		console.log(user);
 		req.session.user = user;
 		return res.json({
 			'code' :300,
@@ -59,9 +65,11 @@ exports.registe = function(req,res,next){
 
 	var newUser = new User({
 		userID:	  req.body.userID,
-		name:     req.body.username,
+		name:     req.body.userName,
 		password: password,
+		nickName: req.body.nickName
 	});
+	console.log(newUser.userID);
 	User.get(newUser.userID,function(err,user){
 		if(user){
 			err = 'User already exists.';
@@ -79,7 +87,7 @@ exports.registe = function(req,res,next){
 					'phase':err,
 				});
 			}
-			req.session.user = newUser;
+//			req.session.user = newUser;
 			console.log('registe success',newUser);
 			return res.json({
 					'code':200,
@@ -90,10 +98,21 @@ exports.registe = function(req,res,next){
 	});
 }
 exports.logOut = function(req,res,next){
-	req.session.user =  null;
-	return res.json({
-		'code':400,
-		'phase':'logout success'
-	});
 
-};
+	if( req.session.user.uID == req.body.userID){
+		req.session.user =  null;
+		console.log(req.session.user);
+		return res.json({
+			'code':350,
+			'phase':'logout success'
+		});
+	}else{
+		return res.json({
+			'code':351,
+			'phase': 'logout failed'
+		}); 
+	}
+	
+}
+
+
